@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { getTodayWatchMinutes, getWatchGoalPercent, loadWatchGoal, getTodayWatchSeconds } from '../utils/watchTimeTracker'
 
 const SNAPSHOT_KEY = 'en_daily-snapshot'
 const ACTIVITY_LOG_KEY = 'en_activity-log'
@@ -11,6 +12,7 @@ const MINUTES_PER_UNIT = {
   shadowing: 3,
   grammar: 1.5,
   dictation: 5,
+  watch: 1,
 }
 
 const DAILY_TASKS = [
@@ -41,6 +43,15 @@ const DAILY_TASKS = [
     id: 'dictation', icon: '✏️', label: '听写练习', target: 1, unit: '次',
     link: '/immersion', storageKey: 'en_dictation-scores',
     getCount: (data) => (Array.isArray(data) ? data.length : 0),
+  },
+  {
+    id: 'watch', icon: '🎬', label: '动画浸泡', target: 1, unit: '次',
+    link: '/immersion', storageKey: 'en_daily_watch_time',
+    getCount: (data) => {
+      if (!data || typeof data !== 'object') return 0
+      const today = new Date().toISOString().slice(0, 10)
+      return data[today] && data[today] >= 60 ? 1 : 0
+    },
   },
 ]
 
@@ -152,6 +163,9 @@ function HomePage() {
   const [heatmapData, setHeatmapData] = useState([])
   const [todayMinutes, setTodayMinutes] = useState(0)
   const [maxMinutes, setMaxMinutes] = useState(10)
+  const [watchMinutes, setWatchMinutes] = useState(0)
+  const [watchPercent, setWatchPercent] = useState(0)
+  const [watchGoal, setWatchGoal] = useState(15)
 
   useEffect(() => {
     const today = getToday()
@@ -244,6 +258,11 @@ function HomePage() {
         ? (shadowingStats.totalStars / shadowingStats.count).toFixed(1)
         : '—',
     })
+
+    // Watch time
+    setWatchMinutes(getTodayWatchMinutes())
+    setWatchPercent(getWatchGoalPercent())
+    setWatchGoal(loadWatchGoal())
   }, [])
 
   const completedCount = tasks.filter((t) => t.status === 'done').length
@@ -292,6 +311,31 @@ function HomePage() {
           <span>
             {completedCount === tasks.length ? '🎉 今日任务已完成' : `${tasks.length - completedCount} 项任务待完成`}
           </span>
+        </div>
+      </div>
+
+      {/* Watch time card */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
+              <span>🎬</span> 今日动画浸泡
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              {watchMinutes >= watchGoal
+                ? `宝宝已经浸泡了 ${watchMinutes} 分钟，耳朵越来越灵啦！🎉`
+                : watchMinutes > 0
+                  ? `宝宝已经浸泡了 ${watchMinutes} 分钟，耳朵越来越灵啦！`
+                  : '今天还没看动画哦，去浸泡一会吧～'}
+            </p>
+            <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
+              <span>目标 {watchGoal} 分钟/天</span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-1 shrink-0 pl-2">
+            <CircularRing percent={watchPercent} size={64} strokeWidth={4} />
+            <span className="text-[10px] text-slate-400">{watchMinutes}/{watchGoal} 分</span>
+          </div>
         </div>
       </div>
 

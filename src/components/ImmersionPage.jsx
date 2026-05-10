@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import VideoPlayer from './VideoPlayer'
+import AnimationLibrary from './AnimationLibrary'
 
 /* ── Lyrics data ─────────────────────────────────────────── */
 const LYRICS_LINES = [
@@ -75,7 +75,7 @@ function compareAnswers(correct, user) {
 
 /* ── Sub-components ──────────────────────────────────────── */
 
-function RecommendationTab() {
+function SongTab() {
   const synthRef = useRef(window.speechSynthesis)
 
   useEffect(() => {
@@ -91,79 +91,53 @@ function RecommendationTab() {
   }, [])
 
   return (
-    <div className="space-y-6">
-      {/* Video Player */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-2xl">🐷</span>
-          <h3 className="text-lg font-semibold text-slate-800">
-            今日动画 · <span className="text-pink-500">小猪佩奇</span>
-          </h3>
-        </div>
-        <p className="text-sm text-slate-500 mb-2">
-          Peppa Pig — 第一季 第一集 <em>&ldquo;Muddy Puddles&rdquo;</em>
-        </p>
-        <p className="text-xs text-slate-400 mb-4">
-          粘贴视频链接开始播放。支持 MP4 链接或本地文件。播放进度自动保存。
-        </p>
-        <VideoPlayer />
-        <div className="mt-4 p-3 rounded-lg bg-slate-50 text-xs text-slate-500">
-          <p className="font-medium mb-1">💡 学习建议</p>
-          <p>先看一遍了解剧情 → 第二遍跟读简单词（jump / rain / boots）→ 第三遍尝试复述</p>
-        </div>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-2xl">🎵</span>
+        <h3 className="text-lg font-semibold text-slate-800">
+          今日儿歌 · <span className="text-amber-500">Twinkle Twinkle Little Star</span>
+        </h3>
       </div>
 
-      {/* Song lyrics */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">🎵</span>
-          <h3 className="text-lg font-semibold text-slate-800">
-            今日儿歌 · <span className="text-amber-500">Twinkle Twinkle Little Star</span>
-          </h3>
-        </div>
+      <button
+        onClick={() => {
+          const full = LYRICS_LINES.map((l) => l.text.replace(/[,!]/g, '')).join('. ')
+          speak(full)
+        }}
+        className="mb-4 px-4 py-2 bg-amber-50 text-amber-600 rounded-full text-sm font-medium hover:bg-amber-100 transition-colors cursor-pointer"
+      >
+        🔊 播放整首
+      </button>
 
-        <button
-          onClick={() => {
-            const full = LYRICS_LINES.map((l) => l.text.replace(/[,!]/g, '')).join('. ')
-            speak(full)
-          }}
-          className="mb-4 px-4 py-2 bg-amber-50 text-amber-600 rounded-full text-sm font-medium hover:bg-amber-100 transition-colors cursor-pointer"
-        >
-          🔊 播放整首
-        </button>
-
-        <div className="space-y-3">
-          {LYRICS_LINES.map((line, i) => (
-            <div key={i} className="group">
-              <div className="flex items-center gap-2 flex-wrap">
-                {line.text.split(/(\s+)/).map((token, j) => {
-                  if (token.trim() === '') {
-                    return <span key={j}>{token}</span>
-                  }
-                  const clean = token.replace(/[,!]/g, '')
-                  return (
-                    <button
-                      key={j}
-                      onClick={() => speak(clean)}
-                      className="text-base text-slate-700 hover:text-primary hover:bg-primary/5 px-0.5 rounded transition-colors cursor-pointer"
-                      title={`朗读 "${clean}"`}
-                    >
-                      {token}
-                    </button>
-                  )
-                })}
-                <button
-                  onClick={() => speak(line.text.replace(/[,!]/g, ''))}
-                  className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-slate-300 hover:text-amber-500 cursor-pointer"
-                  title="播放整句"
-                >
-                  🔊
-                </button>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5 ml-1">{line.translation}</p>
+      <div className="space-y-3">
+        {LYRICS_LINES.map((line, i) => (
+          <div key={i} className="group">
+            <div className="flex items-center gap-2 flex-wrap">
+              {line.text.split(/(\s+)/).map((token, j) => {
+                if (token.trim() === '') return <span key={j}>{token}</span>
+                const clean = token.replace(/[,!]/g, '')
+                return (
+                  <button
+                    key={j}
+                    onClick={() => speak(clean)}
+                    className="text-base text-slate-700 hover:text-primary hover:bg-primary/5 px-0.5 rounded transition-colors cursor-pointer"
+                    title={`朗读 "${clean}"`}
+                  >
+                    {token}
+                  </button>
+                )
+              })}
+              <button
+                onClick={() => speak(line.text.replace(/[,!]/g, ''))}
+                className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-slate-300 hover:text-amber-500 cursor-pointer"
+                title="播放整句"
+              >
+                🔊
+              </button>
             </div>
-          ))}
-        </div>
+            <p className="text-xs text-slate-400 mt-0.5 ml-1">{line.translation}</p>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -467,20 +441,20 @@ function DictationTab() {
 /* ── Main Page ────────────────────────────────────────────── */
 
 function ImmersionPage() {
-  const [tab, setTab] = useState('recommend')
+  const [tab, setTab] = useState('animation')
 
   return (
     <div className="max-w-lg mx-auto px-4 py-4">
-      {/* Tabs */}
       <div className="flex bg-slate-100 rounded-xl p-1 mb-5">
         {[
-          { key: 'recommend', label: '📺 今日推荐' },
+          { key: 'animation', label: '🎬 动画浸泡' },
+          { key: 'song', label: '🎵 儿歌' },
           { key: 'dictation', label: '✏️ 听写练习' },
         ].map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+            className={`flex-1 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
               tab === key
                 ? 'bg-white text-slate-800 shadow-sm'
                 : 'text-slate-500 hover:text-slate-700'
@@ -491,7 +465,20 @@ function ImmersionPage() {
         ))}
       </div>
 
-      {tab === 'recommend' ? <RecommendationTab /> : <DictationTab />}
+      {tab === 'animation' && (
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-2xl">🎬</span>
+            <h3 className="text-lg font-semibold text-slate-800">动画资源库</h3>
+          </div>
+          <p className="text-xs text-slate-400 mb-4">
+            添加 YouTube 或 Bilibili 的嵌入链接，建立专属英语动画库
+          </p>
+          <AnimationLibrary />
+        </div>
+      )}
+      {tab === 'song' && <SongTab />}
+      {tab === 'dictation' && <DictationTab />}
     </div>
   )
 }
