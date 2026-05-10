@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FF8C69;
+  --color-primary-dark: #E07B5A;
+  --color-primary-light: #FFF0EB;
+  --color-accent: #FFB347;
+  --color-surface: #fefcf3;
+  --color-card: #ffffff;
+  --color-warm: #fefcf3;
+  --color-warm-hover: #faf5e6;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
