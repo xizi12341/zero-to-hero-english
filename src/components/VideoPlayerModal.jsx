@@ -9,9 +9,16 @@ function formatTime(totalSeconds) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
+function normalizeUrl(url) {
+  if (!url) return ''
+  // Fix protocol-relative URLs so they work in file:// (Electron) and https:// contexts
+  if (url.startsWith('//')) return 'https:' + url
+  return url
+}
+
 function VideoPlayerModal({ animation, onClose }) {
   const displayName = animation.title || animation.name
-  const iframeSrc = animation.url || animation.embedUrl
+  const iframeSrc = normalizeUrl(animation.url || animation.embedUrl)
   const [seconds, setSeconds] = useState(0)
   const [running, setRunning] = useState(false)
   const intervalRef = useRef(null)

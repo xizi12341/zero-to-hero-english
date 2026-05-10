@@ -23,10 +23,41 @@ function seedDefaults() {
   return defaults
 }
 
+function repairUrl(url) {
+  if (!url) return url
+  // Fix protocol-relative URLs for Electron file:// compatibility
+  let fixed = url.startsWith('//') ? 'https:' + url : url
+  // Fix malformed Bilibili URLs like "player.bilibili.V1..." — missing .com and path
+  if (fixed.includes('player.bilibili.') && !fixed.includes('player.bilibili.com')) {
+    const bvid = fixed.match(/bilibili\.([A-Za-z0-9]+)/)
+    if (bvid) {
+      fixed = 'https://player.bilibili.com/player.html?bvid=' + bvid[1]
+    }
+  }
+  return fixed
+}
+
+function repairAnimations(list) {
+  let changed = false
+  const repaired = list.map((item) => {
+    const src = item.url || item.embedUrl
+    if (!src) return item
+    const fixed = repairUrl(src)
+    if (fixed !== src) {
+      changed = true
+      return { ...item, url: item.url ? fixed : undefined, embedUrl: item.embedUrl ? fixed : undefined }
+    }
+    return item
+  })
+  if (changed) saveAnimations(repaired)
+  return repaired
+}
+
 export function loadAnimations() {
   try {
     if (isFirstRun()) return seedDefaults()
-    return JSON.parse(localStorage.getItem(STORAGE_KEY))
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY))
+    return repairAnimations(Array.isArray(data) ? data : [])
   } catch {
     return seedDefaults()
   }

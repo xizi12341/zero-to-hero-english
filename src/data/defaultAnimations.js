@@ -10,7 +10,7 @@ const defaultAnimations = [
     id: 'default_2',
     title: 'Maisy Mouse (小鼠波波)',
     description: '画面简洁，旁白语速慢，贴近幼儿生活。',
-    url: '//player.bilibili.V1Pr421x7HS',
+    url: '//player.bilibili.com/player.html?bvid=BV1Pr421x7HS',
     category: '入门',
   },
   {
