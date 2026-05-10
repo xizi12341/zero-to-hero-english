@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import BottomNav from './components/BottomNav'
 import HomePage from './components/HomePage'
@@ -10,7 +10,7 @@ import GrammarPage from './components/GrammarPage'
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="min-h-screen bg-warm">
         <Header />
         <Routes>
@@ -23,7 +23,7 @@ function App() {
         </Routes>
         <BottomNav />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

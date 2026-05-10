@@ -44,7 +44,9 @@
       "Bash(mkdir -p \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app\")",
       "Bash(unzip -o \"C:/Users/12075/electron-v42.0.1-win32-x64.zip\" -d \"E:/ZeroToHeroEnglish/portable/英语从0/\")",
       "Bash(cp -r E:/ZeroToHeroEnglish/dist \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app/\")",
-      "Bash(cp -r E:/ZeroToHeroEnglish/electron \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app/\")"
+      "Bash(cp -r E:/ZeroToHeroEnglish/electron \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app/\")",
+      "Bash(rm -rf \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app\")",
+      "Bash(cp E:/ZeroToHeroEnglish/package.json \"E:/ZeroToHeroEnglish/portable/英语从0/resources/app/\")"
     ]
   }
 }

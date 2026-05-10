@@ -13,21 +13,12 @@ function createWindow() {
     minWidth: 360,
     minHeight: 640,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
-    icon: path.join(__dirname, '../public/favicon.svg'),
   })
 
-  const isDev = process.env.NODE_ENV === 'development'
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:5173')
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
-  } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
-  }
-
+  mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
   mainWindow.setMenuBarVisibility(false)
 }
 
