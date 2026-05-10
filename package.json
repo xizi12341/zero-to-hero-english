@@ -1,13 +1,17 @@
 {
   "name": "zerotoheroenglish",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:build": "vite build && electron-builder --win portable",
+    "electron:start": "vite build && electron ."
   },
   "dependencies": {
     "@capacitor/android": "^8.3.3",
@@ -35,6 +39,28 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.0.12",
+    "cross-env": "^7.0.3"
+  },
+  "build": {
+    "appId": "com.zero.englishhero",
+    "productName": "英语从0",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/**/*"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "public/favicon.svg"
+    },
+    "portable": {
+      "artifactName": "英语从0.exe"
+    }
   }
 }

@@ -34,3 +34,6 @@ android/local.properties
 *.jks
 *.keystore
 .env
+portable/
+英语从0-portable.zip
+release/

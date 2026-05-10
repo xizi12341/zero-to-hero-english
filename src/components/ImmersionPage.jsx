@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import VideoPlayer from './VideoPlayer'
 
 /* ── Lyrics data ─────────────────────────────────────────── */
 const LYRICS_LINES = [
@@ -91,7 +92,7 @@ function RecommendationTab() {
 
   return (
     <div className="space-y-6">
-      {/* Peppa Pig */}
+      {/* Video Player */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">🐷</span>
@@ -103,30 +104,9 @@ function RecommendationTab() {
           Peppa Pig — 第一季 第一集 <em>&ldquo;Muddy Puddles&rdquo;</em>
         </p>
         <p className="text-xs text-slate-400 mb-4">
-          全球最受欢迎的幼儿英语启蒙动画。语速慢、词汇简单、每集5分钟，非常适合零基础学习者。
+          粘贴视频链接开始播放。支持 MP4 链接或本地文件。播放进度自动保存。
         </p>
-
-        <div className="space-y-2 text-sm">
-          <a
-            href="https://search.bilibili.com/all?keyword=小猪佩奇 第一季 第一集"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-3 rounded-lg bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors"
-          >
-            <span>📺</span>
-            <span>B站搜索：<strong>小猪佩奇 第一季 第一集</strong></span>
-          </a>
-          <a
-            href="https://www.youtube.com/results?search_query=Peppa+Pig+Season+1+Episode+1+Muddy+Puddles"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-          >
-            <span>▶</span>
-            <span>YouTube: <strong>Peppa Pig S01E01 Muddy Puddles</strong></span>
-          </a>
-        </div>
-
+        <VideoPlayer />
         <div className="mt-4 p-3 rounded-lg bg-slate-50 text-xs text-slate-500">
           <p className="font-medium mb-1">💡 学习建议</p>
           <p>先看一遍了解剧情 → 第二遍跟读简单词（jump / rain / boots）→ 第三遍尝试复述</p>
