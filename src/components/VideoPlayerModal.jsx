@@ -10,6 +10,8 @@ function formatTime(totalSeconds) {
 }
 
 function VideoPlayerModal({ animation, onClose }) {
+  const displayName = animation.title || animation.name
+  const iframeSrc = animation.url || animation.embedUrl
   const [seconds, setSeconds] = useState(0)
   const [running, setRunning] = useState(false)
   const intervalRef = useRef(null)
@@ -73,7 +75,7 @@ function VideoPlayerModal({ animation, onClose }) {
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-slate-900 text-white">
           <h3 className="text-sm font-medium truncate flex-1 mr-2">
-            {animation.name}
+            {displayName}
           </h3>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 text-amber-400">
@@ -98,13 +100,13 @@ function VideoPlayerModal({ animation, onClose }) {
 
         {/* iframe player */}
         <div className="flex-1 bg-black flex items-center justify-center">
-          {animation.embedUrl ? (
+          {iframeSrc ? (
             <iframe
-              src={animation.embedUrl}
+              src={iframeSrc}
               className="w-full h-full max-w-4xl"
               allow="autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
-              title={animation.name}
+              title={displayName}
             />
           ) : (
             <p className="text-slate-400 text-sm">无播放链接</p>

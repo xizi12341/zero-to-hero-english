@@ -141,6 +141,8 @@ function AnimationLibrary() {
           <AnimatePresence>
             {animations.map((item, i) => {
               const thumb = getThumbnail(item)
+              const displayName = item.title || item.name
+              const platformLabel = item.category || PLATFORM_LABELS[item.platform] || item.platform
               return (
                 <motion.div
                   key={item.id}
@@ -158,36 +160,43 @@ function AnimationLibrary() {
                     {thumb ? (
                       <img
                         src={thumb}
-                        alt={item.name}
+                        alt={displayName}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />
                     ) : (
                       <span className="text-3xl">
-                        {item.platform === 'youtube' ? '▶' : item.platform === 'bilibili' ? '📺' : '🎬'}
+                        {item.platform === 'youtube' ? '▶' : item.platform === 'bilibili' || item.url?.includes('bilibili') ? '📺' : '🎬'}
                       </span>
                     )}
-                    {/* Play overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
                       <Play className="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white" />
                     </div>
 
-                    {/* Platform badge */}
                     <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
-                      {PLATFORM_LABELS[item.platform] || item.platform}
+                      {platformLabel}
                     </span>
                   </div>
 
                   {/* Name + delete */}
-                  <div className="p-2 flex items-center justify-between gap-1">
-                    <span className="text-xs text-slate-700 truncate flex-1">{item.name}</span>
-                    <button
-                      onClick={() => setDeleteId(item.id)}
-                      className="p-1 text-slate-300 hover:text-red-500 transition-colors cursor-pointer shrink-0"
-                      title="删除"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="p-2 space-y-0.5">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-xs text-slate-700 truncate flex-1 font-medium">
+                        {displayName}
+                      </span>
+                      <button
+                        onClick={() => setDeleteId(item.id)}
+                        className="p-1 text-slate-300 hover:text-red-500 transition-colors cursor-pointer shrink-0"
+                        title="删除"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    {item.description && (
+                      <p className="text-[10px] text-slate-400 leading-relaxed line-clamp-2">
+                        {item.description}
+                      </p>
+                    )}
                   </div>
                 </motion.div>
               )

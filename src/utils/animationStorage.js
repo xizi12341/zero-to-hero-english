@@ -1,10 +1,34 @@
+import defaultAnimations from '../data/defaultAnimations'
+
 const STORAGE_KEY = 'en_animation_library'
+
+function isFirstRun() {
+  const raw = localStorage.getItem(STORAGE_KEY)
+  if (raw === null) return true
+  try {
+    const arr = JSON.parse(raw)
+    return !Array.isArray(arr) || arr.length === 0
+  } catch {
+    return true
+  }
+}
+
+function seedDefaults() {
+  const defaults = defaultAnimations.map((d) => ({
+    ...d,
+    platform: detectPlatform(d.url),
+    addedAt: new Date().toISOString(),
+  }))
+  saveAnimations(defaults)
+  return defaults
+}
 
 export function loadAnimations() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    if (isFirstRun()) return seedDefaults()
+    return JSON.parse(localStorage.getItem(STORAGE_KEY))
   } catch {
-    return []
+    return seedDefaults()
   }
 }
 
